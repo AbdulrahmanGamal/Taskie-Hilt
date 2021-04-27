@@ -45,18 +45,28 @@ import com.raywenderlich.android.taskie.App
 import com.raywenderlich.android.taskie.R
 import com.raywenderlich.android.taskie.model.Success
 import com.raywenderlich.android.taskie.networking.NetworkStatusChecker
+import com.raywenderlich.android.taskie.networking.RemoteApi
+import com.raywenderlich.android.taskie.preferences.PreferencesHelper
 import com.raywenderlich.android.taskie.ui.login.LoginActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Displays the user profile information.
  */
+@AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
-  private val remoteApi = App.remoteApi
+  @Inject
+  lateinit var  remoteApi: RemoteApi
+
+  @Inject
+  lateinit var preferencesHelper: PreferencesHelper
+
   private val networkStatusChecker by lazy {
     NetworkStatusChecker(activity?.getSystemService(ConnectivityManager::class.java))
   }
@@ -85,7 +95,7 @@ class ProfileFragment : Fragment() {
 
   private fun initUi() {
     logOut.setOnClickListener {
-      App.preferences.saveToken("")
+      preferencesHelper.saveToken("")
       startActivity(Intent(activity, LoginActivity::class.java))
       activity?.finish()
     }

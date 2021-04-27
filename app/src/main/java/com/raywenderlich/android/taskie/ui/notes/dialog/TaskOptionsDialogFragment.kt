@@ -45,19 +45,24 @@ import com.raywenderlich.android.taskie.App
 import com.raywenderlich.android.taskie.R
 import com.raywenderlich.android.taskie.model.Success
 import com.raywenderlich.android.taskie.networking.NetworkStatusChecker
+import com.raywenderlich.android.taskie.networking.RemoteApi
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_dialog_task_options.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Displays the options to delete or complete a task.
  */
+@AndroidEntryPoint
 class TaskOptionsDialogFragment : DialogFragment() {
 
   private var taskOptionSelectedListener: TaskOptionSelectedListener? = null
 
-  private val remoteApi = App.remoteApi
+  @Inject
+  lateinit var  remoteApi: RemoteApi
   private val networkStatusChecker by lazy {
     NetworkStatusChecker(activity?.getSystemService(ConnectivityManager::class.java))
   }

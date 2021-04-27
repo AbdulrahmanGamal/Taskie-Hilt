@@ -42,18 +42,22 @@ import com.raywenderlich.android.taskie.R
 import com.raywenderlich.android.taskie.model.Success
 import com.raywenderlich.android.taskie.model.request.UserDataRequest
 import com.raywenderlich.android.taskie.networking.NetworkStatusChecker
+import com.raywenderlich.android.taskie.networking.RemoteApi
 import com.raywenderlich.android.taskie.utils.gone
 import com.raywenderlich.android.taskie.utils.toast
 import com.raywenderlich.android.taskie.utils.visible
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_register.*
+import javax.inject.Inject
 
 /**
  * Displays the Register screen, with the options to register, or head over to Login!
  */
+@AndroidEntryPoint
 class RegisterActivity : AppCompatActivity() {
 
-  private val remoteApi = App.remoteApi
-
+  @Inject
+  lateinit var  remoteApi: RemoteApi
   private val networkStatusChecker by lazy {
     NetworkStatusChecker(getSystemService(ConnectivityManager::class.java))
   }

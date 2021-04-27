@@ -46,24 +46,30 @@ import com.raywenderlich.android.taskie.R
 import com.raywenderlich.android.taskie.model.Success
 import com.raywenderlich.android.taskie.model.Task
 import com.raywenderlich.android.taskie.networking.NetworkStatusChecker
+import com.raywenderlich.android.taskie.networking.RemoteApi
 import com.raywenderlich.android.taskie.ui.notes.dialog.AddTaskDialogFragment
 import com.raywenderlich.android.taskie.ui.notes.dialog.TaskOptionsDialogFragment
 import com.raywenderlich.android.taskie.utils.gone
 import com.raywenderlich.android.taskie.utils.toast
 import com.raywenderlich.android.taskie.utils.visible
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_notes.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Fetches and displays notes from the API.
  */
+@AndroidEntryPoint
 class NotesFragment : Fragment(), AddTaskDialogFragment.TaskAddedListener,
   TaskOptionsDialogFragment.TaskOptionSelectedListener {
 
   private val adapter by lazy { TaskAdapter(::onItemSelected) }
-  private val remoteApi = App.remoteApi
+  @Inject
+  lateinit var  remoteApi: RemoteApi
+
   private val networkStatusChecker by lazy {
     NetworkStatusChecker(activity?.getSystemService(ConnectivityManager::class.java))
   }

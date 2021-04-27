@@ -38,23 +38,32 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.raywenderlich.android.taskie.App
 import com.raywenderlich.android.taskie.R
 import com.raywenderlich.android.taskie.model.Success
 import com.raywenderlich.android.taskie.model.request.UserDataRequest
 import com.raywenderlich.android.taskie.networking.NetworkStatusChecker
+import com.raywenderlich.android.taskie.networking.RemoteApi
+import com.raywenderlich.android.taskie.preferences.PreferencesHelper
 import com.raywenderlich.android.taskie.ui.main.MainActivity
 import com.raywenderlich.android.taskie.ui.register.RegisterActivity
 import com.raywenderlich.android.taskie.utils.gone
 import com.raywenderlich.android.taskie.utils.visible
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_login.*
+import javax.inject.Inject
 
 /**
  * Displays the Login screen, with the options to head over to the Register screen.
  */
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
-  private val remoteApi = App.remoteApi
+  @Inject
+  lateinit var  remoteApi:RemoteApi
+
+  @Inject
+  lateinit var preferencesHelper: PreferencesHelper
+
   private val networkStatusChecker by lazy {
     NetworkStatusChecker(getSystemService(ConnectivityManager::class.java))
   }
@@ -64,7 +73,7 @@ class LoginActivity : AppCompatActivity() {
     setContentView(R.layout.activity_login)
     initUi()
 
-    if (App.preferences.getToken().isNotBlank()) {
+    if (preferencesHelper.getToken().isNotBlank()) {
       startActivity(MainActivity.getIntent(this))
     }
   }
@@ -97,7 +106,7 @@ class LoginActivity : AppCompatActivity() {
 
   private fun onLoginSuccess(token: String) {
     errorText.gone()
-    App.preferences.saveToken(token)
+    preferencesHelper.saveToken(token)
     startActivity(MainActivity.getIntent(this))
   }
 
